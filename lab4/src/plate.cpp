@@ -38,6 +38,42 @@ Plate::Plate(int points) {
 			}
 		}
 	}
+	newGrid_ = grid_;
+
+	for (auto& row : grid_) {
+		for (auto& val : row) {
+			std::cout << val << " ";
+		}
+		std::cout << "\n";
+	}
+}
+
+void Plate::updatePoint(int i, int j)
+{
+	double tempSum{0.0};
+	//assumes not updating an edge point...
+	tempSum += grid_[i - 1][j];
+	tempSum += grid_[i + 1][j];
+	tempSum += grid_[i][j - 1];
+	tempSum += grid_[i][j + 1];
+		
+	double newTemp = tempSum / 4.0;
+	//std::cout << "Based on temps " << grid_[i - 1][j] <<", " << grid_[i + 1][j] << ", " << grid_[i ][j-1] << ", and " << grid_[i][j+1] << "...new temp = " << newTemp << "\n";
+	newGrid_[i][j] = newTemp;
+
+
+
+}
+
+void Plate::update() {
+	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << "\n";
+	for (int i = 1; i < grid_.size()-1; i++) {
+		for (int j = 1; j < grid_.size()-1; j++)
+			updatePoint(i, j);
+	}
+	
+	// update grid to newgrid
+	grid_ = newGrid_;
 
 	for (auto& row : grid_) {
 		for (auto& val : row) {

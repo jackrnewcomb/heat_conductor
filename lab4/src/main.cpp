@@ -68,6 +68,9 @@ int main(int argc, char* argv[])
     }
 
     Plate plate(256);
+
+    
+    plate.update();
     
     return 0;
     

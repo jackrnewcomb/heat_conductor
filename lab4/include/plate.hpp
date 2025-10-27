@@ -5,10 +5,12 @@
 class Plate {
 public:
 	Plate(int points);
-	
+	void update();
+	void updatePoint(int i, int j);
 private:
 
 	std::vector<std::vector<double>> grid_;
+	std::vector<std::vector<double>> newGrid_;
 
 	int pointsPerSide{ 0 };
 	double sideLength{ 10.0 }; //ft
