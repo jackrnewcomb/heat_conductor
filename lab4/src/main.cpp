@@ -2,6 +2,8 @@
 #include <string>
 #include <iostream>
 
+#include "plate.hpp"
+
 //Gonna have to clean all this up later, but i'm on a train with just my laptop so this is what we're getting
 //No clang cuz laptop 
 
@@ -64,6 +66,8 @@ int main(int argc, char* argv[])
     {
         return -1;
     }
+
+    Plate plate(256);
     
     return 0;
     
