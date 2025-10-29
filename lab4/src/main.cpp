@@ -1,7 +1,9 @@
 #include <map>
 #include <string>
 #include <iostream>
-
+#include <vector>
+#include <algorithm>
+#include <fstream>
 #include "plate.hpp"
 
 //Gonna have to clean all this up later, but i'm on a train with just my laptop so this is what we're getting
@@ -68,9 +70,29 @@ int main(int argc, char* argv[])
     }
 
     Plate plate(256);
-
     
-    plate.update();
+    for (int i = 0; i < std::stoi(argMap["-I"]); i++) {
+        plate.update();
+    }
+
+    auto final_plate = plate.getGrid();
+
+
+    // Open a file in write mode
+    std::ofstream file("finalTemperatures.csv");
+
+    // Check if the file is open
+    if (file.is_open()) {
+        for (const auto& row : final_plate) {
+            for (const auto& val : row) {
+                file << val << ",";
+            }
+            file << "\n";
+        }
+
+        // Close the file
+        file.close();
+    }
     
     return 0;
     

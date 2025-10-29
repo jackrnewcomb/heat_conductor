@@ -7,6 +7,7 @@ public:
 	Plate(int points);
 	void update();
 	void updatePoint(int i, int j);
+	std::vector<std::vector<double>> getGrid() { return grid_; }
 private:
 
 	std::vector<std::vector<double>> grid_;
