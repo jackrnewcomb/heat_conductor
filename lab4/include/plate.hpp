@@ -7,11 +7,13 @@ public:
 	Plate(int points);
 	void update();
 	void updatePoint(int i, int j);
-	std::vector<std::vector<double>> getGrid() { return grid_; }
+	std::vector<double> getGrid() { return grid_; }
+	int getPointsPerSide() { return pointsPerSide; }
 private:
 
-	std::vector<std::vector<double>> grid_;
-	std::vector<std::vector<double>> newGrid_;
+	std::vector<double> grid_;     
+	std::vector<double> newGrid_;   
+
 
 	int pointsPerSide{ 0 };
 	double sideLength{ 10.0 }; //ft

@@ -9,13 +9,10 @@ Plate::Plate(int points) {
 	// initialize grid_
 	std::vector<double> emptyRow;
 
-	for (int i = 0; i < pointsPerSide; ++i) {
-		emptyRow.push_back(0.0);
+	for (int i = 0; i < pointsPerSide*pointsPerSide; ++i) {
+		grid_.push_back(0.0);
 	}
 
-	for (int i = 0; i < pointsPerSide; ++i) {
-		grid_.push_back(emptyRow);
-	}
 
 	//Fill the edges with the correct temperatures 
 
@@ -25,12 +22,12 @@ Plate::Plate(int points) {
 	std::vector<int> filament_index_spread{ mid_point - (number_of_filament_points / 2), mid_point + (number_of_filament_points / 2) };
 
 
-	for (int i = 0; i < grid_.size(); i++) {
-		for (int j = 0; j < grid_[0].size(); j++) {
-			if ((i >= filament_index_spread[0] && i <= filament_index_spread[1]) && j == grid_.size() - 1) {
-				grid_[i][j] = 100;
-			} else if (i == 0 || i == grid_.size()-1 || j == 0 || j == grid_.size()-1) {
-				grid_[i][j] = 20;
+	for (int i = 0; i < pointsPerSide; i++) {
+		for (int j = 0; j < pointsPerSide; j++) {
+			if ((i >= filament_index_spread[0] && i <= filament_index_spread[1]) && j == pointsPerSide - 1) {
+				grid_[i*pointsPerSide + j] = 100;
+			} else if (i == 0 || i == pointsPerSide-1 || j == 0 || j == pointsPerSide-1) {
+				grid_[i*pointsPerSide + j] = 20;
 			}
 		}
 	}
@@ -43,14 +40,14 @@ void Plate::updatePoint(int i, int j)
 {
 	double tempSum{0.0};
 	//assumes not updating an edge point...
-	tempSum += grid_[i - 1][j];
-	tempSum += grid_[i + 1][j];
-	tempSum += grid_[i][j - 1];
-	tempSum += grid_[i][j + 1];
+	tempSum += grid_[(i - 1) * pointsPerSide + j];
+	tempSum += grid_[(i + 1) * pointsPerSide + j];
+	tempSum += grid_[i * pointsPerSide + j - 1];
+	tempSum += grid_[i * pointsPerSide + j + 1];
 		
 	double newTemp = tempSum / 4.0;
 	//std::cout << "Based on temps " << grid_[i - 1][j] <<", " << grid_[i + 1][j] << ", " << grid_[i ][j-1] << ", and " << grid_[i][j+1] << "...new temp = " << newTemp << "\n";
-	newGrid_[i][j] = newTemp;
+	newGrid_[i * pointsPerSide + j] = newTemp;
 
 
 
@@ -58,19 +55,13 @@ void Plate::updatePoint(int i, int j)
 
 void Plate::update() {
 	//std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << "\n";
-	for (int i = 1; i < grid_.size()-1; i++) {
-		for (int j = 1; j < grid_.size()-1; j++)
+	for (int i = 1; i < pointsPerSide - 1; i++) {
+		for (int j = 1; j < pointsPerSide-1; j++)
 			updatePoint(i, j);
 	}
 	
 	// update grid to newgrid
 	grid_ = newGrid_;
-	/*
-	for (auto& row : grid_) {
-		for (auto& val : row) {
-			std::cout << val << " ";
-		}
-		std::cout << "\n";
-	}*/
+
 
 }

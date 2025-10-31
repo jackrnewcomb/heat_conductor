@@ -81,17 +81,14 @@ int main(int argc, char* argv[])
     // Open a file in write mode
     std::ofstream file("finalTemperatures.csv");
 
-    // Check if the file is open
-    if (file.is_open()) {
-        for (const auto& row : final_plate) {
-            for (const auto& val : row) {
-                file << val << ",";
-            }
-            file << "\n";
-        }
+    int n = plate.getPointsPerSide();
 
-        // Close the file
-        file.close();
+    for (int i = 0; i < final_plate.size(); i++) {
+        file << final_plate[i];
+        if ((i + 1) % n == 0)  // end of row
+            file << "\n";
+        else
+            file << ",";       // between elements
     }
     
     return 0;
