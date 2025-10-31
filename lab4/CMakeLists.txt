@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
 # Gather source files
-file(GLOB_RECURSE SRC_FILES src/*.cpp) #src/*.cu)
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.cu)
 include_directories(include)
 
 # Create the executable

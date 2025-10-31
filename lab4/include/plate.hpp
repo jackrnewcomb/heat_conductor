@@ -5,10 +5,11 @@
 class Plate {
 public:
 	Plate(int points);
-	void update();
 	void updatePoint(int i, int j);
 	std::vector<double> getGrid() { return grid_; }
+	std::vector<double> getNewGrid() { return newGrid_; }
 	int getPointsPerSide() { return pointsPerSide; }
+	void updateGPU(double* h_grid, double* h_newGrid, int n, int numIterations);
 private:
 
 	std::vector<double> grid_;     

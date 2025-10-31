@@ -52,16 +52,3 @@ void Plate::updatePoint(int i, int j)
 
 
 }
-
-void Plate::update() {
-	//std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << "\n";
-	for (int i = 1; i < pointsPerSide - 1; i++) {
-		for (int j = 1; j < pointsPerSide-1; j++)
-			updatePoint(i, j);
-	}
-	
-	// update grid to newgrid
-	grid_ = newGrid_;
-
-
-}

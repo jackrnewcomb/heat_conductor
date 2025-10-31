@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <fstream>
 #include "plate.hpp"
+#include "plate_cuda.hpp"
+
 
 //Gonna have to clean all this up later, but i'm on a train with just my laptop so this is what we're getting
 //No clang cuz laptop 
@@ -70,10 +72,13 @@ int main(int argc, char* argv[])
     }
 
     Plate plate(256);
-    
-    for (int i = 0; i < std::stoi(argMap["-I"]); i++) {
-        plate.update();
-    }
+
+    // run GPU simulation
+    updateGPU(plate.getGrid().data(), plate.getNewGrid().data(),
+        plate.getPointsPerSide(), 10000);
+
+    // write to CSV as before
+
 
     auto final_plate = plate.getGrid();
 
