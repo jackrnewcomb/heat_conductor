@@ -9,6 +9,8 @@ Also declares the GPU update function.
 
 */
 
+#pragma once
+
 #include <cmath>
 #include <iostream>
 #include <vector>
