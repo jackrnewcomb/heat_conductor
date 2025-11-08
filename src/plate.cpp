@@ -34,7 +34,7 @@ Plate::Plate(int points)
     // Lets fill the edges with the correct starting temperatures
 
     // Determine the number of points that are 100 degree filaments
-    auto numberOfFilamentPoints = int(4 * (10.0 / pointsPerSide));
+    auto numberOfFilamentPoints = int((filamentLength / sideLength) * pointsPerSide);
 
     // Determine the locations of the filament points
     auto midPoint = int(pointsPerSide / 2);
@@ -50,13 +50,13 @@ Plate::Plate(int points)
             if ((i >= filamentIndexSpread[0] && i <= filamentIndexSpread[1]) && j == pointsPerSide - 1)
             {
                 // Set it to 100 degrees
-                grid_[i * pointsPerSide + j] = 100;
+                grid_[i * pointsPerSide + j] = filamentTemp;
             }
             // else if its a usual edge point...
             else if (i == 0 || i == pointsPerSide - 1 || j == 0 || j == pointsPerSide - 1)
             {
                 // Set it to 20 degrees
-                grid_[i * pointsPerSide + j] = 20;
+                grid_[i * pointsPerSide + j] = edgeTemp;
             }
         }
     }
