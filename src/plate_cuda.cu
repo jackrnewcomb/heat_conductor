@@ -1,4 +1,5 @@
 #include <cuda_runtime.h>
+#include <cstdio>
 
 __global__ void updateKernel(double* grid, double* newGrid, int n) {
     int i = blockIdx.y * blockDim.y + threadIdx.y;  // row
@@ -12,6 +13,7 @@ __global__ void updateKernel(double* grid, double* newGrid, int n) {
     }
 }
 
+
 void updateGPU(double* h_grid, double* h_newGrid, int n, int numIterations) {
     double *d_grid, *d_newGrid;
     size_t size = n * n * sizeof(double);
@@ -20,13 +22,17 @@ void updateGPU(double* h_grid, double* h_newGrid, int n, int numIterations) {
     cudaMalloc(&d_newGrid, size);
 
     cudaMemcpy(d_grid, h_grid, size, cudaMemcpyHostToDevice);
-    cudaMemcpy(d_newGrid, h_newGrid, size, cudaMemcpyHostToDevice);
+    cudaMemset(d_newGrid, 0, size);
 
     dim3 threadsPerBlock(16,16);
     dim3 numBlocks((n + 15)/16, (n + 15)/16);
 
     for(int iter = 0; iter < numIterations; ++iter) {
         updateKernel<<<numBlocks, threadsPerBlock>>>(d_grid, d_newGrid, n);
+        cudaError_t err = cudaGetLastError();
+        if (err != cudaSuccess) {
+            printf("CUDA error: %s\n", cudaGetErrorString(err));
+        }
         cudaDeviceSynchronize();
         std::swap(d_grid, d_newGrid);
     }
@@ -36,3 +42,4 @@ void updateGPU(double* h_grid, double* h_newGrid, int n, int numIterations) {
     cudaFree(d_grid);
     cudaFree(d_newGrid);
 }
+
