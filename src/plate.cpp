@@ -11,6 +11,11 @@ members, fills the grid with initial temperatures, etc.
 
 #include "plate.hpp"
 
+/**
+ * @brief Plate constructor. Takes in an int representing the total number of points in the grid, and constructs a
+ * Plate
+ * @param The total number of points in the grid
+ */
 Plate::Plate(int points)
 {
     // Ensure that the user inputted a perfect square as the number of points

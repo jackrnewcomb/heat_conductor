@@ -17,6 +17,11 @@ console/csv file. Also provides a function to sanitize user arguments.
 #include <string>
 #include <vector>
 
+/**
+ * @brief A function to sanitize user inputs by ensuring that they follow the input requirements (integer args,
+ * following -x format)
+ * @param A reference to the map of args to values
+ */
 bool sanitizeArgMap(const std::map<std::string, std::string> &map)
 {
     // Check for each pair in the map...
@@ -37,6 +42,9 @@ bool sanitizeArgMap(const std::map<std::string, std::string> &map)
     return true;
 }
 
+/**
+ * @brief main function, reads in user input and executes the gpu update
+ */
 int main(int argc, char *argv[])
 {
     // maps arg types to their arg
