@@ -1,57 +1,66 @@
+/*
+Author: Jack Newcomb
+Class: ECE6122
+Last Date Modified: 11/8/2025
+Description:
+
+The plate implementation. Provides an implementation of the constructor that was declared in the header: Initializes
+members, fills the grid with initial temperatures, etc.
+
+*/
+
 #include "plate.hpp"
 
 Plate::Plate(int points)
 {
-    // add check here that points is a square
-    pointsPerSide = int(sqrt(points));
+    // Ensure that the user inputted a perfect square as the number of points
+    if ((floor(sqrt(points)) != ceil(sqrt(points))))
+    {
+        std::cout << "Input size to Plate is not a perfect square. Aborting.";
+        return;
+    }
 
+    // Initialize pointsPerSide and pointsLength
+    pointsPerSide = int(sqrt(points));
     pointLength = sideLength / pointsPerSide;
 
-    // initialize grid_
+    // initialize grid_ with 0s
     std::vector<double> emptyRow;
-
     for (int i = 0; i < pointsPerSide * pointsPerSide; ++i)
     {
         grid_.push_back(0.0);
     }
 
-    // Fill the edges with the correct temperatures
+    // Lets fill the edges with the correct starting temperatures
 
-    auto number_of_filament_points =
-        int(4 * (10.0 / pointsPerSide)); // number of filament points isn't an int...rounding for now
+    // Determine the number of points that are 100 degree filaments
+    auto numberOfFilamentPoints = int(4 * (10.0 / pointsPerSide));
 
-    auto mid_point = int(pointsPerSide / 2);
-    std::vector<int> filament_index_spread{mid_point - (number_of_filament_points / 2),
-                                           mid_point + (number_of_filament_points / 2)};
+    // Determine the locations of the filament points
+    auto midPoint = int(pointsPerSide / 2);
+    std::vector<int> filamentIndexSpread{midPoint - (numberOfFilamentPoints / 2),
+                                         midPoint + (numberOfFilamentPoints / 2)};
 
+    // Work through the grid, and if a point is an edge point, append it with the proper starting temperature
     for (int i = 0; i < pointsPerSide; i++)
     {
         for (int j = 0; j < pointsPerSide; j++)
         {
-            if ((i >= filament_index_spread[0] && i <= filament_index_spread[1]) && j == pointsPerSide - 1)
+            // If its a filament edge point...
+            if ((i >= filamentIndexSpread[0] && i <= filamentIndexSpread[1]) && j == pointsPerSide - 1)
             {
+                // Set it to 100 degrees
                 grid_[i * pointsPerSide + j] = 100;
             }
+            // else if its a usual edge point...
             else if (i == 0 || i == pointsPerSide - 1 || j == 0 || j == pointsPerSide - 1)
             {
+                // Set it to 20 degrees
                 grid_[i * pointsPerSide + j] = 20;
             }
         }
     }
+
+    // Copy to newGrid_
     newGrid_ = grid_;
-}
-
-void Plate::updatePoint(int i, int j)
-{
-    double tempSum{0.0};
-    // assumes not updating an edge point...
-    tempSum += grid_[(i - 1) * pointsPerSide + j];
-    tempSum += grid_[(i + 1) * pointsPerSide + j];
-    tempSum += grid_[i * pointsPerSide + j - 1];
-    tempSum += grid_[i * pointsPerSide + j + 1];
-
-    double newTemp = tempSum / 4.0;
-    // std::cout << "Based on temps " << grid_[i - 1][j] <<", " << grid_[i + 1][j] << ", " << grid_[i ][j-1] << ", and "
-    // << grid_[i][j+1] << "...new temp = " << newTemp << "\n";
-    newGrid_[i * pointsPerSide + j] = newTemp;
 }
