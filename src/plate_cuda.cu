@@ -7,8 +7,12 @@ __global__ void updateKernel(double* grid, double* newGrid, int n) {
 
     if (i > 0 && i < n-1 && j > 0 && j < n-1) {
         int idx = i * n + j;
-        double tempSum = grid[(i-1)*n + j] + grid[(i+1)*n + j] +
-                         grid[i*n + (j-1)] + grid[i*n + (j+1)];
+        double tempSum = 0.0;
+        tempSum += grid[(i - 1) * n + j];  // up
+        tempSum += grid[(i + 1) * n + j];  // down
+        tempSum += grid[i * n + (j - 1)];  // left
+        tempSum += grid[i * n + (j + 1)];  // right
+
         newGrid[idx] = tempSum / 4.0;
     }
 }
@@ -22,7 +26,7 @@ void updateGPU(double* h_grid, double* h_newGrid, int n, int numIterations) {
     cudaMalloc(&d_newGrid, size);
 
     cudaMemcpy(d_grid, h_grid, size, cudaMemcpyHostToDevice);
-    cudaMemset(d_newGrid, 0, size);
+    cudaMemcpy(d_newGrid, h_newGrid, size, cudaMemcpyHostToDevice);
 
     dim3 threadsPerBlock(16,16);
     dim3 numBlocks((n + 15)/16, (n + 15)/16);
@@ -37,7 +41,12 @@ void updateGPU(double* h_grid, double* h_newGrid, int n, int numIterations) {
         std::swap(d_grid, d_newGrid);
     }
 
-    cudaMemcpy(h_grid, d_grid, size, cudaMemcpyDeviceToHost);
+    // Copy back the correct grid after the final swap
+    if (numIterations % 2 == 0)
+        cudaMemcpy(h_grid, d_grid, size, cudaMemcpyDeviceToHost);
+    else
+        cudaMemcpy(h_grid, d_newGrid, size, cudaMemcpyDeviceToHost);
+    //cudaMemcpy(h_grid, d_grid, size, cudaMemcpyDeviceToHost);
 
     cudaFree(d_grid);
     cudaFree(d_newGrid);
