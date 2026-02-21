@@ -1,4 +1,4 @@
-# 🔥 Heat Conduction Simulation (C++)
+# Heat Conduction Simulation (C++)
 
 A simple 2D heat conduction / diffusion simulation written in C++. The model iteratively relaxes a temperature field on a square plate with fixed boundary conditions and exports the resulting temperature grid to a CSV file for analysis/plotting.
 
@@ -33,16 +33,6 @@ This repository contains:
 
 ---
 
-## Repository Layout
-
-Current structure:
-
-- `lab4/` — simulation source, headers, and CMake project
-
-> If you want to make this repo more portfolio-friendly, consider renaming `lab4/` to something like `src/` or `heat_conductor/`, and updating the CMake project name.
-
----
-
 ## Build Instructions
 
 ### Prerequisites
@@ -52,7 +42,6 @@ Current structure:
 ### Build (out-of-source recommended)
 
 ```bash
-cd lab4
 mkdir build
 cd build
 cmake ..
@@ -73,5 +62,11 @@ relaxation iterations (default: 10000).
 After completion, the program writes to finalTemperatures.csv, with each row of the csv corresponding to one row of the plate
 grid.
 
+---
+
 ## Sample Output
+
+Below is a sample output, plotted in excel from the CSV log.
+
+<img width="465" height="274" alt="image" src="https://github.com/user-attachments/assets/49a4d287-162d-4304-8e9f-eb2c543443dc" />
 
