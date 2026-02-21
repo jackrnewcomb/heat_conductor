@@ -1,6 +1,7 @@
-# Heat Conduction Simulation (C++)
+# GPU-Accelerated 2D Heat Conduction Simulation (C++ / CUDA)
 
-A simple 2D heat conduction / diffusion simulation written in C++. The model iteratively relaxes a temperature field on a square plate with fixed boundary conditions and exports the resulting temperature grid to a CSV file for analysis/plotting.
+A GPU-accelerated simulation of two-dimensional heat conduction written in C++ with CUDA.  
+This project uses NVIDIA’s CUDA platform to offload computation of iterative heat diffusion to the GPU for performance.
 
 ---
 
@@ -8,38 +9,46 @@ A simple 2D heat conduction / diffusion simulation written in C++. The model ite
 
 This repository contains:
 
-- A CPU-based 2D heat diffusion simulation on a square grid
-- A plate model with fixed-temperature edges and an internal heat source region
-- An iterative update loop that relaxes interior points using neighbor averaging
-- CSV export of the final temperature field (`finalTemperatures.csv`)
+- A 2D grid simulation of heat diffusion over time  
+- A parallel CUDA kernel that updates the temperature field across grid cells  
+- Host code that manages data transfer to/from the GPU and iteration control  
+- Output written to CSV for analysis or visualization  
+
+This project demonstrates basic use of **CUDA** for parallelizing numerical simulations over a grid. :contentReference[oaicite:1]{index=1}
 
 ---
 
 ## Features
 
-- Grid-based plate model with configurable resolution
-- Fixed boundary conditions (edges held at a constant temperature)
-- Heat source region (filament) with a higher fixed temperature
-- Iterative relaxation update for interior cells (4-neighbor average)
-- Output to CSV for plotting in Python/Excel/Matlab/etc.
+- GPU acceleration using CUDA C/C++  
+- Iterative relaxation method for solving heat diffusion  
+- Configurable grid size and iteration count  
+- Output of final temperature field to CSV  
+- Simple, clean command-line interface
 
 ---
 
 ## Tech Stack
 
-- **Language:** C++
-- **Build:** CMake
-- **Output:** CSV (`finalTemperatures.csv`)
+- Language: C++ / CUDA  
+- Parallel Acceleration: NVIDIA CUDA  
+- Build System: CMake  
+- Output: Temperature grid CSV
+
+> CUDA (Compute Unified Device Architecture) enables general-purpose computation on NVIDIA GPUs, allowing thousands of threads to operate in parallel. :contentReference[oaicite:2]{index=2}
 
 ---
 
 ## Build Instructions
 
 ### Prerequisites
-- C++17-capable compiler
+
+- NVIDIA GPU with CUDA support  
+- CUDA Toolkit installed  
+- C++ compiler compatible with CUDA (e.g., `nvcc`)  
 - CMake
 
-### Build (out-of-source recommended)
+### Build
 
 ```bash
 mkdir build
@@ -48,19 +57,18 @@ cmake ..
 cmake --build .
 ```
 
---- 
+---
 
-## Usage 
+## Usage
 
-Run the simulation executable from the build output directory. Optionally, you can provide an argument for the number of 
-relaxation iterations (default: 10000).
+You can then run the simulation directly from the build output directory via the heat-dispersion.exe. Optional arguments
+include the number of grid points and number of iterations.
 
 ```bash
-./main -I 20000
+./heat_conductor --grid 1024 --iterations 10000
 ```
 
-After completion, the program writes to finalTemperatures.csv, with each row of the csv corresponding to one row of the plate
-grid.
+The result will be a `finalTemperatures.csv` containing a 2D grid of temperatures.
 
 ---
 
@@ -70,3 +78,8 @@ Below is a sample output, plotted in excel from the CSV log.
 
 <img width="465" height="274" alt="image" src="https://github.com/user-attachments/assets/49a4d287-162d-4304-8e9f-eb2c543443dc" />
 
+---
+
+## Author
+
+Jack Newcomb
