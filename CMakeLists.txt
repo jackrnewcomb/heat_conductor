@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(Lab4 LANGUAGES CXX) #CUDA)
+project(heat-conductor LANGUAGES CXX) #CUDA)
 
 # Set C++ and CUDA standards
 set(CMAKE_CXX_STANDARD 17)
