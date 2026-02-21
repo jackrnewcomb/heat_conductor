@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -6,10 +5,16 @@
 #include <vector>
 
 #include "plate.hpp"
+#include "plate_cuda.hpp"
 
-bool sanitizeArgMap(std::map<std::string, std::string>& map) {
+/**
+ * @brief A function to sanitize user inputs by ensuring that they follow the
+ * input requirements (integer args, following -x format)
+ * @param A reference to the map of args to values
+ */
+bool sanitizeArgMap(const std::map<std::string, std::string>& map) {
   // Check for each pair in the map...
-  for (auto& pair : map) {
+  for (const auto& pair : map) {
     // Try casting it to an int
     try {
       auto test = std::stoi(pair.second);
@@ -24,17 +29,26 @@ bool sanitizeArgMap(std::map<std::string, std::string>& map) {
   return true;
 }
 
+/**
+ * @brief main function, reads in user input and executes the gpu update
+ */
 int main(int argc, char* argv[]) {
   // maps arg types to their arg
   std::map<std::string, std::string> argMap = {
-      {"-N", "256"},   // default number of threads
-      {"-I", "10000"}  // default cell size
+      {"-N", "256"},   // default grid size in points
+      {"-I", "10000"}  // default number of iterations
   };
 
   // For each arg passed to the command line...
   for (int i = 1; i < argc; i++) {
     // Cast to a string
     std::string arg = argv[i];
+
+    // If -q is in the args at all, terminate the program
+    if (arg == "-q") {
+      std::cout << "Quit directive received: Terminating program\n";
+      return 0;
+    }
 
     // If the arg contains a "-", the next arg should specify a value. Add it to
     // the map and increment the argc counter
@@ -52,28 +66,40 @@ int main(int argc, char* argv[]) {
   // Check for clean inputs
   bool clean = sanitizeArgMap(argMap);
   if (!clean) {
+    // There was an error sanitizing the map. Abort
     return -1;
   }
 
-  Plate plate(256);
+  int userInputSize = std::stoi(argMap["-N"]);
+  Plate plate(userInputSize);
 
-  for (int i = 0; i < std::stoi(argMap["-I"]); i++) {
-    plate.update();
-  }
+  // run GPU simulation
+  int userInputIter = std::stoi(argMap["-I"]);
+  updateGPU(plate.getGrid().data(), plate.getNewGrid().data(),
+            plate.getPointsPerSide(), userInputIter);
+
+  // write to CSV as before
 
   auto final_plate = plate.getGrid();
 
-  // Open a file in write mode
+  // Open the finalTemperatures csv
   std::ofstream file("finalTemperatures.csv");
 
   int n = plate.getPointsPerSide();
 
+  // For each element in the final plate...
   for (int i = 0; i < final_plate.size(); i++) {
+    // Write the value
     file << final_plate[i];
-    if ((i + 1) % n == 0)  // end of row
+
+    // If we are at the end of a row, append a new line
+    if ((i + 1) % n == 0) {
       file << "\n";
-    else
-      file << ",";  // between elements
+    }
+    // Otherwise add a comma to add it to the row
+    else {
+      file << ",";
+    }
   }
 
   return 0;
