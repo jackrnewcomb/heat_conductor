@@ -14,7 +14,7 @@ This repository contains:
 - Host code that manages data transfer to/from the GPU and iteration control  
 - Output written to CSV for analysis or visualization  
 
-This project demonstrates basic use of **CUDA** for parallelizing numerical simulations over a grid. :contentReference[oaicite:1]{index=1}
+This project demonstrates basic use of CUDA for parallelizing numerical simulations over a grid.
 
 ---
 
@@ -35,7 +35,7 @@ This project demonstrates basic use of **CUDA** for parallelizing numerical simu
 - Build System: CMake  
 - Output: Temperature grid CSV
 
-> CUDA (Compute Unified Device Architecture) enables general-purpose computation on NVIDIA GPUs, allowing thousands of threads to operate in parallel. :contentReference[oaicite:2]{index=2}
+> CUDA (Compute Unified Device Architecture) enables general-purpose computation on NVIDIA GPUs, allowing thousands of threads to operate in parallel.
 
 ---
 
